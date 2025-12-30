@@ -128,6 +128,17 @@ class CPModuleTest(ModuleCase):
         self.assertIn("bacon", data)
         self.assertNotIn("spam", data)
 
+    @with_tempfile()
+    @pytest.mark.slow_test
+    def test_get_template_with_imported_context(self, tgt):
+        """
+        cp.get_template
+        """
+        self.run_function("cp.get_template", ["salt://issue-68572.j2", tgt])
+        with salt.utils.files.fopen(tgt, "r") as scene:
+            data = salt.utils.stringutils.to_unicode(scene.read())
+        self.assertIn("bar", data)
+
     @pytest.mark.slow_test
     def test_get_dir(self):
         """
